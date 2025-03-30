@@ -46,7 +46,6 @@ class MatrixCalculator:
     def print_matrix(self):
         self.update_matrix_properties() # 행렬 속성 업데이트
         print_line() # 구분선 출력
-            # print(self.matrix[i])
         for r in range (self.rows):
             print("[", end="")
             for c in range (self.cols):
@@ -142,24 +141,27 @@ class MatrixCalculator:
             for r in range (self.rows):
                 self.matrix[r][c] = self.matrix[r][c] * self.value
         self.print_matrix()
+    
+    # 한 행에 실수배
+    def row_scalar_mul(self):
+        print_line()
+        print("****** 행에 실수 곱하기 *****")
+        row_num = self.get_row_num("실수를 곱할 행 번호를 입력하세요: ")
+        value = float(input("곱할 실수를 입력하세요: "))
+        for i in range (self.cols):
+            self.matrix[row_num-1][i] *= value
+        self.print_matrix()
 
     # 스칼라 곱 후에 다른 행에 더하기
     def scalar_mul_and_addition(self):
         print_line()
         print("***** 행에 실수 곱해서 다른 행에 더하기 *****")
-        while (True):
-            self.mul_row_num = int(input("실수를 곱할 행 번호를 입력하세요: "))
-            if (self.mul_row_num > self.rows or self.mul_row_num <= 0):
-                print("존재하지 않는 행 번호입니다. 다시 입력해주세요.")
-            else:
-                break
+        self.mul_row_num = self.get_row_num("실수를 곱할 행 번호를 입력하세요: ")
         value = float(input("곱할 실수를 입력하세요: "))
         while (True):
-            self.add_row_num = int(input("곱한 행을 더할 행 번호를 입력하세요: "))
+            self.add_row_num = self.get_row_num("곱한 행을 더할 행 번호를 입력하세요: ")
             if (self.add_row_num == self.mul_row_num):
-                print("다른 행을 선택해주세요")
-            elif (self.add_row_num > self.rows or self.add_row_num <= 0):
-                print("존재하지 않는 행 번호입니다. 다시 입력해주세요.")
+                print(f"같은 행에 더할 수 없습니다. {self.mul_row_num}행 외에 다른 행을 선택해 주세요")
             else:
                 break
         for i in range (self.cols):
@@ -187,7 +189,7 @@ def print_line():
 def run_calculator():
     while (True):
         print_line() # 구분선 출력
-        print("cr: 행 성분 변경 | cc: 열 성분 변경 | c: 성분 1개 변경 | ir: 행 교환 | m: 행렬 실수곱 | ma: 실수곱+더하기 | q: 종료")
+        print("cr: 행 성분 변경 | cc: 열 성분 변경 | c: 성분 1개 변경 | ir: 행 교환 | rm: 한 행에 실수곱 | ma: 실수곱+더하기 | m: 행렬 실수곱 | q: 종료")
         option = input("수행할 연산을 선택하세요: ")
         if (option == "c"): # 성분 바꾸기
             calc1.change_entry()
@@ -201,6 +203,8 @@ def run_calculator():
             calc1.interchange_row()
         elif (option == "ma"): # 행에 실수곱 후 다른 행에 더함
             calc1.scalar_mul_and_addition()
+        elif (option == "rm"): # 행 실수곱
+            calc1.row_scalar_mul()
         elif (option == "q"): # 종료
             return 0
         else:
